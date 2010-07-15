@@ -19,12 +19,12 @@ class web {
     * @return string
     * @access public
     */
-	function run($urls,$db_parameters='') {
+	static function run($urls,$db_parameters='') {
 		error_reporting(0);
 		require('pathvars.class.php');
 		if (is_array($db_parameters)) { 
 		    require_once('mysql.class.php');
-			$db = &new mysql('localhost',$db_parameters['user'],$db_parameters['pw'],$db_parameters['db']);}
+			$db = new mysql('localhost',$db_parameters['user'],$db_parameters['pw'],$db_parameters['db']);}
 		if (count($_POST) !== 0) { $method = 'POST'; } else { $method = 'GET'; }
 		$path = new PathVars($_SERVER['SCRIPT_NAME']);
 		$fullpath = $path->fetchAll();
@@ -50,7 +50,7 @@ class web {
     * @return string
     * @access public
     */
-	function render($file,$data='') {
+	static function render($file,$data='') {
 		require_once('template.class.php');
 		$template = new Template('templates/' . $file);
 		if (is_array($data)) {
@@ -77,7 +77,7 @@ class web {
     */
 	function mask($location) {
 		require_once('HTTP/Request.php');
-		$req =& new HTTP_Request($location);
+		$req = new HTTP_Request($location);
 		if (!PEAR::isError($req->sendRequest())) {
 			echo $req->getResponseBody();
 		} else {

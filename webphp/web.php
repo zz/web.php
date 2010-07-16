@@ -20,11 +20,13 @@ class web {
     * @access public
     */
 	static function run($urls,$db_parameters='') {
-		error_reporting(0);
+		$db = false;
+		error_reporting(E_ALL);
 		require('pathvars.class.php');
 		if (is_array($db_parameters)) { 
 		    require_once('mysql.class.php');
-			$db = new mysql('localhost',$db_parameters['user'],$db_parameters['pw'],$db_parameters['db']);}
+			$db = new mysql('localhost',$db_parameters['user'],$db_parameters['pw'],$db_parameters['db']);
+		}
 		if (count($_POST) !== 0) { $method = 'POST'; } else { $method = 'GET'; }
 		$path = new PathVars($_SERVER['SCRIPT_NAME']);
 		$fullpath = $path->fetchAll();
@@ -32,6 +34,7 @@ class web {
 		    array_pop($fullpath);
 		    $fullpath[] = '*';
         }
+		$printpath = null;
         foreach ($fullpath as $segment) {
             $printpath .= '/'.$segment;              
         }
@@ -52,10 +55,10 @@ class web {
     */
 	static function render($file,$data='') {
 		require_once('template.class.php');
-		$template = new Template('templates/' . $file);
-		if (is_array($data)) {
-			$template->replaceTags($data);
-		}
+		$template = new Template('templates/' . $file, $data);
+		//if (is_array($data)) {
+		//	$template->replaceTags($data);
+		//}
 		return $template->output();
 	}
 	
